@@ -55,3 +55,59 @@ int menu1()
     cout << "\nData tim dan 5 pemain berhasil disimpan ke tim.txt\n";
     return 0;
 }
+
+void menu2() {
+    FILE *file;
+    Tim tim;
+
+    file = fopen("tim.txt", "rb");
+    if (file == NULL) {
+        cout << "Gagal membuka file untuk membaca!" << endl;
+        return;
+    }
+
+    int nomorTim = 1;
+    while (fread(&tim, sizeof(Tim), 1, file)) {
+        cout << "===========================" << endl;
+        cout << "Tim #" << nomorTim++ << endl;
+        cout << "Nama Tim: " << tim.namaTim << endl;
+        cout << "===========================" << endl;
+
+        for (int i = 0; i < 5; i++) {
+            cout << "  Player " << i + 1 << endl;
+            cout << "    Nama     : " << tim.pemain[i].nama << endl;
+            cout << "    Nickname : " << tim.pemain[i].nickname << endl;
+            cout << "    Role     : " << tim.pemain[i].role << endl;
+            cout << "---------------------------" << endl;
+        }
+    }
+
+    fclose(file);
+}
+
+
+int main(int argc, char const *argv[])
+{
+    int pilih;
+
+    cout << "SiMTES" << endl;
+    cout << "Sistem Informasi Manajemen Turnamen Esports" << endl;
+    cout << endl;
+    menu();
+    cout << "Pilih : ";
+    cin >> pilih;
+
+    switch (pilih)
+    {
+    case 1:
+        menu1();
+        break;
+    
+    case 2:
+        menu2();
+    default:
+        break;
+    }
+
+    return 0;
+}
