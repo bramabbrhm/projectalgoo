@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstring>
 using namespace std;
 
 struct Player {
@@ -62,12 +63,11 @@ int menu1()
     }
     fclose(file);
     cout << "\nseluruh data tim berhasil disimpan ke tim.txt\n";
+    clear();
     return 0;
 }
 
 void menu2() {
-    
-
     file = fopen("tim.txt", "rb");
     if (file == NULL) {
         cout << "Gagal membuka file untuk membaca!" << endl;
@@ -91,8 +91,58 @@ void menu2() {
     }
 
     fclose(file);
+    clear();
 }
 
+void menu3(){
+    Tim daftartim[100];
+    int jumlahtim = 0;
+    char cariTim[50];
+    bool found = false;
+
+    file = fopen("tim.txt", "rb");
+    if (file == NULL) {
+        cout << "Gagal membuka file untuk membaca!" << endl;
+        return;
+    }
+    while (fread(&daftartim[jumlahtim], sizeof(Tim), 1, file)) {
+        jumlahtim++;
+    }
+    fclose(file);
+
+    cin.ignore();
+    cout << "Masukkan nama tim : ";
+    cin.getline(cariTim, 50);
+
+    for(int i = 0; i < jumlahtim; i++){
+        if(strcmp(daftartim[i].namaTim, cariTim) == 0){
+            cout << "\n Tim dengan nama " << cariTim << "telah ditemukan";
+            cout << "\n Masukkan skor baru: ";
+            cin >> daftartim[i].skor;
+            found = true;
+            break;
+        } 
+    }
+
+    if (!found) {
+        cout << "Tim dengan nama \"" << cariTim << "\" tidak ditemukan.\n";
+        return;
+
+    }
+    file = fopen("tim.txt", "wb");  
+    if (file == NULL) {
+        cout << "Gagal membuka file untuk menulis ulang!" << endl;
+        return;
+    }
+
+    for (int i = 0; i < jumlahtim; i++) {
+        fwrite(&daftartim[i], sizeof(Tim), 1, file);
+    }
+
+    fclose(file);
+    cout << "Skor berhasil diupdate dan disimpan kembali ke file!\n";
+    clear();
+}
 
 int main(int argc, char const *argv[])
 {
@@ -115,6 +165,12 @@ do
     
     case 2:
         menu2();
+        break;
+
+    case 3:
+        menu3();
+        break;
+
     default:
         break;
     }
