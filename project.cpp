@@ -10,7 +10,11 @@ struct Player {
 struct Tim {
     char namaTim[50];
     Player pemain[5]; 
+    int skor = 0;
 };
+
+    FILE *file;
+    Tim tim;
 
 void menu()
 {
@@ -26,39 +30,43 @@ void menu()
 
 int menu1()
 {
-    Tim tim;
-    FILE *file;
-
     file = fopen("tim.txt", "ab"); 
     if (file == NULL) {
         cout << "Gagal membuka file untuk menyimpan!" << endl;
         return 1;
     }
 
+    int jumlahinput;
+    cout << "Berapa banyak tim yang ingin diinput : ";
+    cin >> jumlahinput;
     cin.ignore();
-    cout << "Masukkan Nama Tim: ";
-    cin.getline(tim.namaTim, 50);
 
-    for (int i = 0; i < 5; i++) {
-        cout << "\nPlayer ke-" << i + 1 << endl;
-        cout << "Nama Asli          : ";
-        cin.getline(tim.pemain[i].nama, 50);
-        cout << "Nickname in game   : ";
-        cin.getline(tim.pemain[i].nickname, 50);
-        cout << "Role               : ";
-        cin.getline(tim.pemain[i].role, 30);
+
+    for (int t = 0; t < jumlahinput; t++)
+    {
+        cout << "\ninput tim ke-" << t+1 << endl;
+        cout << "Nasukkan Nama Tim : ";
+        cin.getline(tim.namaTim, 50);
+
+        for (int i = 0; i < 5; i++) {
+            cout << "\nPlayer ke-" << i + 1 << endl;
+            cout << "Nama Asli          : ";
+            cin.getline(tim.pemain[i].nama, 50);
+            cout << "Nickname in game   : ";
+            cin.getline(tim.pemain[i].nickname, 50);
+            cout << "Role               : ";
+            cin.getline(tim.pemain[i].role, 30);
+            }
+
+            fwrite(&tim, sizeof(Tim), 1, file);
     }
-
-    fwrite(&tim, sizeof(Tim), 1, file);
     fclose(file);
-
-    cout << "\nData tim dan 5 pemain berhasil disimpan ke tim.txt\n";
+    cout << "\nseluruh data tim berhasil disimpan ke tim.txt\n";
     return 0;
 }
 
 void menu2() {
-    FILE *file;
-    Tim tim;
+    
 
     file = fopen("tim.txt", "rb");
     if (file == NULL) {
@@ -90,6 +98,8 @@ int main(int argc, char const *argv[])
 {
     int pilih;
 
+do
+{
     cout << "SiMTES" << endl;
     cout << "Sistem Informasi Manajemen Turnamen Esports" << endl;
     cout << endl;
@@ -108,6 +118,6 @@ int main(int argc, char const *argv[])
     default:
         break;
     }
-
+} while (pilih != 7);
     return 0;
 }
