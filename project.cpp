@@ -12,6 +12,13 @@ struct Tim {
     Player pemain[5]; 
 };
 
+void clear(){
+    cout << "\nTekan tombol apapun untuk melanjutkan";
+    cin.ignore();
+    cin.ignore();
+    system("cls");
+}
+
 void menu()
 {
     cout << "silahkan pilih menu :" << endl;
