@@ -18,6 +18,7 @@ struct Tim {
     Tim tim;
 
 void clear(){
+    cout << "Tekan tombol apapun untuk melanjutkan";
     cin.ignore();
     cin.ignore();
     system("cls");
@@ -99,18 +100,22 @@ void menu2() {
     clear();
 }
 
-void menu3(){
+void menu3()
+{
     Tim daftartim[100];
     int jumlahtim = 0;
     char cariTim[50];
+    int skorbaru;
     bool found = false;
 
     file = fopen("tim.txt", "rb");
-    if (file == NULL) {
+    if (file == NULL)
+    {
         cout << "Gagal membuka file untuk membaca!" << endl;
         return;
     }
-    while (fread(&daftartim[jumlahtim], sizeof(Tim), 1, file)) {
+    while (fread(&daftartim[jumlahtim], sizeof(Tim), 1, file))
+    {
         jumlahtim++;
     }
     fclose(file);
@@ -119,28 +124,33 @@ void menu3(){
     cout << "Masukkan nama tim : ";
     cin.getline(cariTim, 50);
 
-    for(int i = 0; i < jumlahtim; i++){
-        if(strcmp(daftartim[i].namaTim, cariTim) == 0){
-            cout << "\n Tim dengan nama " << cariTim << "telah ditemukan";
-            cout << "\n Masukkan skor baru: ";
-            cin >> daftartim[i].skor;
+    for (int i = 0; i < jumlahtim; i++)
+    {
+        if (strcmp(daftartim[i].namaTim, cariTim) == 0)
+        {
+            cout << "\n Tim dengan nama " << cariTim << " telah ditemukan";
+            cout << "\n Tambahkan skor: ";
+            cin >> skorbaru;
+            daftartim[i].skor += skorbaru;
             found = true;
             break;
-        } 
+        }
     }
 
-    if (!found) {
+    if (!found)
+    {
         cout << "Tim dengan nama \"" << cariTim << "\" tidak ditemukan.\n";
         return;
-
     }
-    file = fopen("tim.txt", "wb");  
-    if (file == NULL) {
+    file = fopen("tim.txt", "wb");
+    if (file == NULL)
+    {
         cout << "Gagal membuka file untuk menulis ulang!" << endl;
         return;
     }
 
-    for (int i = 0; i < jumlahtim; i++) {
+    for (int i = 0; i < jumlahtim; i++)
+    {
         fwrite(&daftartim[i], sizeof(Tim), 1, file);
     }
 
@@ -148,6 +158,7 @@ void menu3(){
     cout << "Skor berhasil diupdate dan disimpan kembali ke file!\n";
     clear();
 }
+
 
 void menu4()
 {
