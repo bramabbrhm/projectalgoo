@@ -31,8 +31,7 @@ void menu()
     cout << "3. Masukkan data skor tim" << endl;
     cout << "4. Sorting tim (berdasar skor total) " << endl;
     cout << "5. Searching(pemain dan tim)" << endl;
-    cout << "6. Simpan hasil pertandingan " << endl;
-    cout << "7. keluar " << endl;
+    cout << "6. keluar " << endl;
 }
 
 int menu1()
@@ -150,6 +149,46 @@ void menu3(){
     clear();
 }
 
+void menu4()
+{
+    Tim daftartim[100];
+    int jumlahtim = 0;
+
+    file = fopen("tim.txt", "rb");
+    if (file == NULL)
+    {
+        cout << "Gagal membuka file untuk membaca!" << endl;
+        return;
+    }
+
+    while (fread(&daftartim[jumlahtim], sizeof(Tim), 1, file))
+    {
+        jumlahtim++;
+    }
+    fclose(file);
+
+    for (int i = 0; i < jumlahtim - 1; i++)
+    {
+        for (int j = 0; j < jumlahtim - i - 1; j++)
+        {
+            if (daftartim[j].skor < daftartim[j + 1].skor)
+            {
+                swap(daftartim[j], daftartim[j + 1]);
+            }
+        }
+    }
+
+    cout << "\nDaftar Tim Berdasarkan Skor (Tertinggi ke Terendah):\n";
+    cout << "=====================================================\n";
+    for (int i = 0; i < jumlahtim; i++)
+    {
+        cout << i + 1 << ". " << daftartim[i].namaTim << " - Skor: " << daftartim[i].skor << endl;
+    }
+
+    cout << endl;
+    clear();
+}
+
 int main(int argc, char const *argv[])
 {
     int pilih;
@@ -176,7 +215,10 @@ do
     case 3:
         menu3();
         break;
-
+    
+    case 4:
+        menu4();
+        break;
     default:
         break;
     }
