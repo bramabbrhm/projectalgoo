@@ -17,6 +17,12 @@ struct Tim {
     FILE *file;
     Tim tim;
 
+void clear(){
+    cin.ignore();
+    cin.ignore();
+    system("cls");
+}
+
 void menu()
 {
     cout << "silahkan pilih menu :" << endl;
