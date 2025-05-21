@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstring>
+#include <iomanip>
 using namespace std;
 
 struct Player {
@@ -11,8 +12,18 @@ struct Player {
 struct Tim {
     char namaTim[50];
     Player pemain[5]; 
-    int skor = 0;
+    int skor;
+    int matchW;
+    int matchL;
+    int gameW;
+    int gameL;
 };
+
+struct Node {
+    Tim data;
+    Node* next;
+};
+Node* head = nullptr, tail = nullptr;
 
     FILE *file;
     Tim tim;
@@ -27,7 +38,7 @@ void clear(){
 void menu()
 {
     cout << "silahkan pilih menu :" << endl;
-    cout << "1. Masukkan data " << endl;
+    cout << "1. Masukkan data tim" << endl;
     cout << "2. Lihat daftar tim " << endl;
     cout << "3. Masukkan data skor tim" << endl;
     cout << "4. Sorting tim (berdasar skor total) " << endl;
