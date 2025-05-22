@@ -23,10 +23,28 @@ struct Node {
     Tim data;
     Node* next;
 };
-Node* head = nullptr, tail = nullptr;
+
+Node *kepala = nullptr, *ekor = nullptr;
 
     FILE *file;
     Tim tim;
+
+void simpanSemuaKeFile() {
+    file = fopen("tim.txt", "wb");
+    if (!file) {
+        cout << "Gagal menyimpan ke file!\n";
+        return;
+    }
+
+    Node* bantu = kepala;
+    while (bantu) {
+        fwrite(&(bantu->data), sizeof(Tim), 1, file);
+        bantu = bantu->next;
+    }
+
+    fclose(file);
+    cout << "Data berhasil disimpan ke peringkat.txt\n";
+}
 
 void clear(){
     cout << "Tekan tombol apapun untuk melanjutkan";
