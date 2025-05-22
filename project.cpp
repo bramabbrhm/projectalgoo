@@ -46,6 +46,25 @@ void simpanSemuaKeFile() {
     cout << "Data berhasil disimpan ke peringkat.txt\n";
 }
 
+void muatDariFile() {
+    file = fopen("tim.txt", "rb");
+    if (!file){
+        cout << "Gagal memuat dari file!\n";
+        return;
+    }
+
+    Tim bacatim;
+    while (fread(&bacatim, sizeof(Tim), 1, file)) {
+        Node* nodeBaru = new Node{bacatim, nullptr};
+        if (kepala == NULL) kepala = ekor = nodeBaru;
+        else {
+            ekor->next = nodeBaru;
+            ekor = nodeBaru;
+        }
+    }
+    fclose(file);
+}
+
 void clear(){
     cout << "Tekan tombol apapun untuk melanjutkan";
     cin.ignore();
