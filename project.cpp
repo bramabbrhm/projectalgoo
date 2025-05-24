@@ -83,6 +83,7 @@ void menu()
     cout << "6. keluar " << endl;
 }
 
+
 void tambahTim() {
     int jumlah;
     cout << "Berapa banyak tim yang ingin ditambahkan? ";
@@ -115,30 +116,22 @@ void tambahTim() {
     clear();
 }
 
-void menu2() {
-    file = fopen("tim.txt", "rb");
-    if (file == NULL) {
-        cout << "Gagal membuka file untuk membaca!" << endl;
+void lihatTim() {
+    if (!kepala) {
+        cout << "Belum ada tim.\n";
+        clear();
         return;
     }
 
-    int nomorTim = 1;
-    while (fread(&tim, sizeof(Tim), 1, file)) {
-        cout << "===========================" << endl;
-        cout << "Tim #" << nomorTim++ << endl;
-        cout << "Nama Tim: " << tim.namaTim << endl;
-        cout << "===========================" << endl;
-
+    Node* bantu = kepala;
+    int no = 1;
+    while (bantu) {
+        cout << "\nTim #" << no++ << ": " << bantu->data.namaTim << " (Skor: " << bantu->data.skor << ")\n";
         for (int i = 0; i < 5; i++) {
-            cout << "  Player " << i + 1 << endl;
-            cout << "    Nama     : " << tim.pemain[i].nama << endl;
-            cout << "    Nickname : " << tim.pemain[i].nickname << endl;
-            cout << "    Role     : " << tim.pemain[i].role << endl;
-            cout << "---------------------------" << endl;
+            cout << "  - " << bantu->data.pemain[i].nickname << " (" << bantu->data.pemain[i].role << ")\n";
         }
+        bantu = bantu->next;
     }
-
-    fclose(file);
     clear();
 }
 
@@ -262,7 +255,7 @@ do
         break;
     
     case 2:
-        menu2();
+        lihatTim();
         break;
 
     case 3:
