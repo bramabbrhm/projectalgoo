@@ -83,42 +83,36 @@ void menu()
     cout << "6. keluar " << endl;
 }
 
-int menu1()
-{
-    file = fopen("tim.txt", "ab"); 
-    if (file == NULL) {
-        cout << "Gagal membuka file untuk menyimpan!" << endl;
-        return 1;
-    }
-
-    int jumlahinput;
-    cout << "Berapa banyak tim yang ingin diinput : ";
-    cin >> jumlahinput;
+void tambahTim() {
+    int jumlah;
+    cout << "Berapa banyak tim yang ingin ditambahkan? ";
+    cin >> jumlah;
     cin.ignore();
 
-
-    for (int t = 0; t < jumlahinput; t++)
-    {
-        cout << "\ninput tim ke-" << t+1 << endl;
-        cout << "Nasukkan Nama Tim : ";
-        cin.getline(tim.namaTim, 50);
+    for (int t = 0; t < jumlah; t++) {
+        Tim newTim = {"", {}, 0, 0, 0, 0, 0};
+        cout << "\nInput Tim ke-" << t + 1 << endl;
+        cout << "Nama Tim: ";
+        cin.getline(newTim.namaTim, 50);
 
         for (int i = 0; i < 5; i++) {
-            cout << "\nPlayer ke-" << i + 1 << endl;
-            cout << "Nama Asli          : ";
-            cin.getline(tim.pemain[i].nama, 50);
-            cout << "Nickname in game   : ";
-            cin.getline(tim.pemain[i].nickname, 50);
-            cout << "Role               : ";
-            cin.getline(tim.pemain[i].role, 30);
-            }
+            cout << "  Pemain ke-" << i + 1 << endl;
+            cout << "    Nama     : "; cin.getline(newTim.pemain[i].nama, 50);
+            cout << "    Nickname : "; cin.getline(newTim.pemain[i].nickname, 50);
+            cout << "    Role     : "; cin.getline(newTim.pemain[i].role, 30);
+        }
 
-            fwrite(&tim, sizeof(Tim), 1, file);
+        Node* newNode = new Node{newTim, nullptr};
+        if (!kepala) kepala = ekor = newNode;
+        else {
+            ekor->next = newNode;
+            ekor = newNode;
+
+        }
     }
-    fclose(file);
-    cout << "\nseluruh data tim berhasil disimpan ke tim.txt\n";
+
+    simpanSemuaKeFile();
     clear();
-    return 0;
 }
 
 void menu2() {
