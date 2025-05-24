@@ -258,7 +258,7 @@ do
     switch (pilih)
     {
     case 1:
-        menu1();
+        tambahTim();
         break;
     
     case 2:
