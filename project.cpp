@@ -77,10 +77,12 @@ void menu()
     cout << "silahkan pilih menu :" << endl;
     cout << "1. Masukkan data tim" << endl;
     cout << "2. Lihat daftar tim " << endl;
-    cout << "3. Masukkan data skor tim" << endl;
-    cout << "4. Sorting tim (berdasar skor total) " << endl;
-    cout << "5. Searching(pemain dan tim)" << endl;
-    cout << "6. keluar " << endl;
+    cout << "3. Input Hasil Pertandingan (Best of 3)" << endl;
+    cout << "4. Lihat Peringkat" << endl;
+    cout << "5. Edit Tim" << endl;
+    cout << "6. Hapus Tim " << endl;
+    cout << "7. Searching (Tim / Player)" << endl;
+    cout << "8. Keluar " << endl;
 }
 
 
@@ -200,45 +202,141 @@ void inputSkor() {
 }
 
 
-void menu4()
-{
-    Tim daftartim[100];
-    int jumlahtim = 0;
-
-    file = fopen("tim.txt", "rb");
-    if (file == NULL)
-    {
-        cout << "Gagal membuka file untuk membaca!" << endl;
+void lihatPeringkat() {
+    if (!kepala) {
+        cout << "Belum ada tim!\n";
+        clear();
         return;
     }
 
-    while (fread(&daftartim[jumlahtim], sizeof(Tim), 1, file))
-    {
-        jumlahtim++;
-    }
-    fclose(file);
-
-    for (int i = 0; i < jumlahtim - 1; i++)
-    {
-        for (int j = 0; j < jumlahtim - i - 1; j++)
-        {
-            if (daftartim[j].skor < daftartim[j + 1].skor)
-            {
-                swap(daftartim[j], daftartim[j + 1]);
+    bool tukar;
+    do {
+        tukar = false;
+        Node* bantu = kepala;
+        while (bantu && bantu->next) {
+            if (bantu->data.skor < bantu->next->data.skor) {
+                swap(bantu->data, bantu->next->data);
+                tukar = true;
             }
+            bantu = bantu->next;
         }
-    }
+    } while (tukar);
 
-    cout << "\nDaftar Tim Berdasarkan Skor (Tertinggi ke Terendah):\n";
-    cout << "=====================================================\n";
-    for (int i = 0; i < jumlahtim; i++)
-    {
-        cout << i + 1 << ". " << daftartim[i].namaTim << " - Skor: " << daftartim[i].skor << endl;
-    }
+    cout << left << setw(18) << "Nama Tim"
+         << right << setw(6) << "Poin"
+         << setw(10) << "W-L(M)"
+         << setw(10) << "W-L(G)"
+         << setw(10) << "WinRate"
+         << setw(10) << "GameRate" << endl;
 
-    cout << endl;
+    cout << string(64, '-') << endl;
+
+    Node* bantu = kepala;
+    while (bantu) {
+        int mw = bantu->data.matchW;
+        int ml = bantu->data.matchL;
+        int gw = bantu->data.gameW;
+        int gl = bantu->data.gameL;
+        float wr;
+        float gr;
+        if (mw + ml != 0){
+            wr = mw * 100.0 / (mw + ml);
+        } else{
+            wr = 0;
+        }
+        
+        if (gw + gl != 0){
+            gr = gw * 100.0 / (gw + gl);
+        } else{
+            gr = 0;
+        }
+
+        cout << left << setw(18) << bantu->data.namaTim
+             << right << setw(6) << bantu->data.skor
+             << setw(5) << mw << "-" << setw(4) << ml
+             << setw(5) << gw << "-" << setw(4) << gl
+             << setw(9) << fixed << setprecision(1) << wr << "%"
+             << setw(9) << fixed << setprecision(1) << gr << "%" << endl;
+
+
+
+
+        bantu = bantu->next;
+    }
     clear();
 }
+
+void editTim()
+{
+    cin.ignore();
+    char cari[50];
+    cout << "Masukkan nama tim yang ingin diedit: ";
+    cin.getline(cari, 50);
+
+    Node *bantu = kepala;
+    while (bantu)
+    {
+        if (strcmp(bantu->data.namaTim, cari) == 0)
+        {
+            cout << "\nEdit nama tim (lama: " << bantu->data.namaTim << "): ";
+            cin.getline(bantu->data.namaTim, 50);
+            for (int i = 0; i < 5; i++)
+            {
+                cout << "\nEdit data pemain ke-" << i + 1 << " (" << bantu->data.pemain[i].nickname << ")" << endl;
+                cout << "  Nama     : ";
+                cin.getline(bantu->data.pemain[i].nama, 50);
+                cout << "  Nickname : ";
+                cin.getline(bantu->data.pemain[i].nickname, 50);
+                cout << "  Role     : ";
+                cin.getline(bantu->data.pemain[i].role, 30);
+            }
+            simpanSemuaKeFile();
+            cout << "Data tim berhasil diperbarui.\n";
+            clear();
+            return;
+        }
+        bantu = bantu->next;
+    }
+    cout << "Tim tidak ditemukan.\n";
+    clear();
+}
+
+void hapusTim()
+{
+    cin.ignore();
+    char cari[50];
+    cout << "Masukkan nama tim yang ingin dihapus: ";
+    cin.getline(cari, 50);
+
+    if (kepala != nullptr && strcmp(kepala->data.namaTim, cari) == 0)
+    {
+        Node *hapus = kepala;
+        kepala = kepala->next;
+        delete hapus;
+        simpanSemuaKeFile();
+        cout << "Tim berhasil dihapus.\n";
+        return;
+    }
+
+    Node *bantu = kepala;
+
+    while (bantu != nullptr && bantu->next != nullptr)
+    {
+        if (strcmp(bantu->next->data.namaTim, cari) == 0)
+        {
+            Node *hapus = bantu->next;
+            bantu->next = hapus->next;
+            delete hapus;
+            simpanSemuaKeFile();
+            cout << "Tim berhasil dihapus.\n";
+            return;
+        }
+        bantu = bantu->next;
+    }
+    cout << "Tim tidak ditemukan.\n";
+    clear();
+}
+
 
 int main(int argc, char const *argv[])
 {
@@ -269,11 +367,20 @@ do
         break;
     
     case 4:
-        menu4();
+        lihatPeringkat();
         break;
+    
+    case 5:
+        editTim();
+        break;
+
+    case 6:
+        hapusTim();
+        break;
+        
     default:
         break;
     }
-} while (pilih != 7);
+} while (pilih != 8);
     return 0;
 }
