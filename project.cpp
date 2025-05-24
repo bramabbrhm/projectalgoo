@@ -135,62 +135,67 @@ void lihatTim() {
     clear();
 }
 
-void menu3()
-{
-    Tim daftartim[100];
-    int jumlahtim = 0;
-    char cariTim[50];
-    int skorbaru;
-    bool found = false;
+void inputSkor() {
+    cout << "\n=== Pilih Tim yang Akan Bertanding ===\n";
+    Node* bantu = kepala;
+    int urutan = 1;
+    while (bantu) {
+        cout << urutan << ". " << bantu->data.namaTim << endl;
+        bantu = bantu->next;
+        urutan++;
+    }
 
-    file = fopen("tim.txt", "rb");
-    if (file == NULL)
-    {
-        cout << "Gagal membuka file untuk membaca!" << endl;
+    int idx1, idx2;
+    cout << "\nPilih nomor tim pertama: "; cin >> idx1;
+    cout << "Pilih nomor tim kedua: "; cin >> idx2;
+
+    if (idx1 == idx2) {
+        cout << "Tim tidak boleh bertanding melawan dirinya sendiri!\n";
         return;
     }
-    while (fread(&daftartim[jumlahtim], sizeof(Tim), 1, file))
-    {
-        jumlahtim++;
+
+    Node* tim1 = kepala;
+    Node* tim2 = kepala;
+    for (int i = 1; i < idx1 && tim1; i++) tim1 = tim1->next;
+    for (int i = 1; i < idx2 && tim2; i++) tim2 = tim2->next;
+
+    if (!tim1 || !tim2) {
+        cout << "Salah satu tim tidak ditemukan!\n";
+        return;
     }
-    fclose(file);
 
-    cin.ignore();
-    cout << "Masukkan nama tim : ";
-    cin.getline(cariTim, 50);
-
-    for (int i = 0; i < jumlahtim; i++)
-    {
-        if (strcmp(daftartim[i].namaTim, cariTim) == 0)
-        {
-            cout << "\n Tim dengan nama " << cariTim << " telah ditemukan";
-            cout << "\n Tambahkan skor: ";
-            cin >> skorbaru;
-            daftartim[i].skor += skorbaru;
-            found = true;
-            break;
+    cout << "\nPertandingan: " << tim1->data.namaTim << " vs " << tim2->data.namaTim << endl;
+    cout << "Masukkan hasil pertandingan (best of 3):\n";
+    int win1 = 0, win2 = 0;
+    for (int i = 1; i <= 3 && win1 < 2 && win2 < 2; i++) {
+        int hasil;
+        cout << "Game " << i << " (1: " << tim1->data.namaTim << " menang, 2: " << tim2->data.namaTim << " menang): ";
+        cin >> hasil;
+        if (hasil == 1) {
+            win1++;
+            tim1->data.gameW++;
+            tim2->data.gameL++;
+        } else if (hasil == 2) {
+            win2++;
+            tim2->data.gameW++;
+            tim1->data.gameL++;
+        } else {
+            cout << "Input tidak valid.\n";
+            i--;
         }
     }
 
-    if (!found)
-    {
-        cout << "Tim dengan nama \"" << cariTim << "\" tidak ditemukan.\n";
-        return;
-    }
-    file = fopen("tim.txt", "wb");
-    if (file == NULL)
-    {
-        cout << "Gagal membuka file untuk menulis ulang!" << endl;
-        return;
+    if (win1 > win2) {
+        tim1->data.matchW++;
+        tim2->data.matchL++;
+        tim1->data.skor += 3;
+    } else {
+        tim2->data.matchW++;
+        tim1->data.matchL++;
+        tim2->data.skor += 3;
     }
 
-    for (int i = 0; i < jumlahtim; i++)
-    {
-        fwrite(&daftartim[i], sizeof(Tim), 1, file);
-    }
-
-    fclose(file);
-    cout << "Skor berhasil diupdate dan disimpan kembali ke file!\n";
+    simpanSemuaKeFile();
     clear();
 }
 
@@ -237,6 +242,7 @@ void menu4()
 
 int main(int argc, char const *argv[])
 {
+    muatDariFile();
     int pilih;
 
 do
@@ -259,7 +265,7 @@ do
         break;
 
     case 3:
-        menu3();
+        inputSkor();
         break;
     
     case 4:
