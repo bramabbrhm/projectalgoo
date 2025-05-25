@@ -180,6 +180,7 @@ void inputSkor()
     if (idx1 == idx2)
     {
         cout << "Tim tidak boleh bertanding melawan dirinya sendiri!\n";
+        clear();
         return;
     }
 
@@ -423,6 +424,7 @@ void searching()
             bantu = bantu->next;
         }
         cout << "Tim tidak ditemukan.\n";
+        clear();
     }
     break;
     case 2:
@@ -447,7 +449,7 @@ void searching()
                         cout << "Role: " << bantu->data.pemain[i].role << endl;
                         ditemukan = true;
                     }
-                    clear();
+                    
                 }
                 bantu = bantu->next;
             }
@@ -457,10 +459,12 @@ void searching()
                 cout << "Player dengan nickname tersebut tidak ditemukan.\n";
             }
         }
+        clear();
     }
     break;
     default:
-        cout << "pilihan tidak valid!";
+        cout << "Pilihan tidak valid!";
+        clear();
         break;
     }
 }
@@ -514,7 +518,7 @@ int main(int argc, char const *argv[])
             break;
 
         default:
-            cout << "pilihan tidak valid!";
+            cout << "Pilihan tidak valid!\n";
             clear();
             break;
         }
