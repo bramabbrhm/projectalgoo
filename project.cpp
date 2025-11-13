@@ -40,7 +40,7 @@ void simpanSemuaKeFile()
         cout << "Gagal menyimpan ke file!\n";
         return;
     }
-
+//fafaafa
     Node *bantu = kepala;
     while (bantu)
     {
